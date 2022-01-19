@@ -14,32 +14,49 @@ y = df.loc[:,'y'].values
 
 maxDeg = 10
 trainingSplit = 0.4
-randomState = 32
-xTrain, xValidate, yTrain, yValidate = train_test_split(x, y, test_size=trainingSplit, random_state=randomState)
+numberOfRuns = 10000
 
-#degree k goes from 0 to 10
+trainingError = [[None] * (maxDeg + 1)] * (numberOfRuns) 
+validateError = [[None] * (maxDeg + 1)] * (numberOfRuns) 
+for run in range(numberOfRuns):
+    xTrain, xValidate, yTrain, yValidate = train_test_split(x, y, test_size=trainingSplit, random_state=run)
+    for k in range(maxDeg + 1):
+        # fit the values for a degree k poly
+        coef = np.polyfit(xTrain, yTrain, k) 
+
+        # store the polynomial
+        # calculate error in polynomial
+        XTrain = np.vander(xTrain, k + 1)
+        XVal = np.vander(xValidate, k + 1)
+        # E = || y - Xa ||^2
+        trainingError[run][k] = np.linalg.norm((yTrain - np.matmul(XTrain, coef)))
+        validateError[run][k] = np.linalg.norm((yValidate - np.matmul(XVal, coef)))
+
+averageTrainingError = [0] * (maxDeg + 1)
+averageValidateError = [0] * (maxDeg + 1)
+for i in range (numberOfRuns):
+    for j in range(maxDeg + 1):
+        averageTrainingError[j] += trainingError[i][j]
+        averageValidateError[j] += validateError[i][j]
+for j in range(maxDeg +1):
+    averageTrainingError[j] /= numberOfRuns
+    averageValidateError[j] /= numberOfRuns
+
+print(f"Average Error in Polynomials:")
+for k in range(maxDeg +1):
+    print(f"poly {k: <2}: Train:{averageTrainingError[k]: <20} Validate:{averageValidateError[k]}")
+
+
+# Outupt the polynomials using all data 
 polyList = [None] * (maxDeg + 1)
 plotList = [None] * (maxDeg + 1)
-trainingError = [None] * (maxDeg + 1)
-validateError = [None] * (maxDeg + 1)
 for k in range(maxDeg + 1):
     # fit the values for a degree k poly
-    coef = np.polyfit(xTrain, yTrain, k) 
-
+    coef = np.polyfit(x, y, k) 
+    
     # store the polynomial
     polyList[k] = np.poly1d(coef)
-
-    # calculate error in polynomial
-    XTrain = np.vander(xTrain, k + 1)
-    XVal = np.vander(xValidate, k + 1)
-    # E = || y - Xa ||^2
-    trainingError[k] = np.linalg.norm((yTrain - np.matmul(XTrain, coef)))
-    validateError[k] = np.linalg.norm((yValidate - np.matmul(XVal, coef)))
-    print(f"Error In poly {k: <2}: Train:{trainingError[k]: <20} Validate:{validateError[k]}")
-
-    # plot polynomial if error is sufficiently small (value from successive runs)
-    if validateError[k] < 100:
-        plotList[k] = plt.plot(x, polyList[k](x), label = f"poly-degree:{k}")
+    plotList[k] = plt.plot(x, polyList[k](x), label = f"poly-degree:{k}")
 
 
 # plot all the results
