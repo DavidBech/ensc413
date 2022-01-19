@@ -33,8 +33,8 @@ for run in range(numberOfRuns):
         XTrain = np.vander(xTrain, k + 1)
         XVal = np.vander(xValidate, k + 1)
         # E = || y - Xa ||^2
-        trainingError[run][k] = np.linalg.norm((yTrain - np.matmul(XTrain, coef)))
-        validateError[run][k] = np.linalg.norm((yValidate - np.matmul(XVal, coef)))
+        trainingError[run][k] = np.linalg.norm((yTrain - np.matmul(XTrain, coef)))**2
+        validateError[run][k] = np.linalg.norm((yValidate - np.matmul(XVal, coef)))**2
 
 # 5. Calculate the average error
 averageTrainingError = [0] * (maxDeg + 1)
