@@ -1,4 +1,4 @@
-Master branch for ensc413 course
+Assignment3 branch for ensc413 course
 
 David Bechert
 
