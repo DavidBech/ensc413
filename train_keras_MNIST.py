@@ -41,7 +41,7 @@ def run(learningRate, batchSize, epochNumber, Adam):
     if Adam:
         opt  = keras.optimizers.Adam(learning_rate=learning_rate)
     else:
-        opt = keras.optemizers.Ftrl(learning_rate=learning_rate)
+        opt  = keras.optimizers.Ftrl(learning_rate=learning_rate)
 
     # define the error criterion ("loss"), optimizer and an optional metric to monitor during training
     model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])
