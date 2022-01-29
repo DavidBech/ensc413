@@ -45,7 +45,7 @@ model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy
 
 # load the mnist training data CSV file using pandas
 # note - this CSV file has no headers (i.e., data starts from the first row)
-df = pd.read_csv("mnist_csv/mnist_train.csv", header=None)
+df = pd.read_csv("../mnist_train.csv", header=None)
 # columns 1-784 are the input values
 x_train = np.asfarray(df.loc[:, 1:input_nodes].values)
 x_train /= 255.0
@@ -77,7 +77,7 @@ print('model saved')
 
 # load the mnist test data CSV file into a list
 #test_data_file = open("mnist_csv/mnist_test_10.csv", 'r')
-test_data_file = open("mnist_csv/mnist_test.csv", 'r')
+test_data_file = open("../mnist_test.csv", 'r')
 test_data_list = test_data_file.readlines()
 test_data_file.close()
 
