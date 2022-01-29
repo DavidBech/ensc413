@@ -20,7 +20,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 def run(learningRate, batchSize, epochNumber, Adam):
     name = f'{"Adam" if Adam else "Ftrl"}'
-    print(f"Run {name} - Learning Rate:{learningRate}, Batch:{batchSize}, Epoch{epochNumber}")
+    print(f"Run {name} - Learning Rate:{learningRate}, Batch:{batchSize}, Epoch:{epochNumber}")
     # start the timer
     start_t = timer()
     # number of input, hidden and output nodes
