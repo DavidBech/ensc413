@@ -1,0 +1,168 @@
+Run Adam - Learning Rate:0.1, Batch:32, Epoch:5
+accuracy = 0.8529
+elapsed build time = 11.334975400000001 seconds
+elapsed accuracy time = 278.0370449 seconds
+elapsed total time = 289.37202030000003 seconds
+Finished Adam - Learning Rate:0.1, Batch:32, Epoch:5
+
+Run Nadam - Learning Rate:0.1, Batch:32, Epoch:5
+accuracy = 0.8231
+elapsed build time = 16.569632000000013 seconds
+elapsed accuracy time = 278.68752629999994 seconds
+elapsed total time = 295.25715829999996 seconds
+Finished Nadam - Learning Rate:0.1, Batch:32, Epoch:5
+
+Run Adam - Learning Rate:0.01, Batch:32, Epoch:5
+accuracy = 0.9682
+elapsed build time = 11.262617100000057 seconds
+elapsed accuracy time = 277.48946849999993 seconds
+elapsed total time = 288.7520856 seconds
+Finished Adam - Learning Rate:0.01, Batch:32, Epoch:5
+
+Run Nadam - Learning Rate:0.01, Batch:32, Epoch:5
+accuracy = 0.9616
+elapsed build time = 16.649450900000033 seconds
+elapsed accuracy time = 278.8815684000001 seconds
+elapsed total time = 295.53101930000014 seconds
+Finished Nadam - Learning Rate:0.01, Batch:32, Epoch:5
+
+Run Adam - Learning Rate:0.001, Batch:32, Epoch:5
+accuracy = 0.9723
+elapsed build time = 11.093574499999932 seconds
+elapsed accuracy time = 278.6950933999999 seconds
+elapsed total time = 289.78866789999984 seconds
+Finished Adam - Learning Rate:0.001, Batch:32, Epoch:5
+
+Run Nadam - Learning Rate:0.001, Batch:32, Epoch:5
+accuracy = 0.9722
+elapsed build time = 16.859927799999923 seconds
+elapsed accuracy time = 278.1345464000001 seconds
+elapsed total time = 294.9944742 seconds
+Finished Nadam - Learning Rate:0.001, Batch:32, Epoch:5
+
+Run Adam - Learning Rate:0.0001, Batch:32, Epoch:5
+accuracy = 0.9275
+elapsed build time = 11.045147299999826 seconds
+elapsed accuracy time = 278.0247237000001 seconds
+elapsed total time = 289.0698709999999 seconds
+Finished Adam - Learning Rate:0.0001, Batch:32, Epoch:5
+
+Run Nadam - Learning Rate:0.0001, Batch:32, Epoch:5
+accuracy = 0.9259
+elapsed build time = 16.3550287999999 seconds
+elapsed accuracy time = 278.87164410000014 seconds
+elapsed total time = 295.22667290000004 seconds
+Finished Nadam - Learning Rate:0.0001, Batch:32, Epoch:5
+
+Run Adam - Learning Rate:0.001, Batch:1, Epoch:5
+accuracy = 0.9784
+elapsed build time = 220.16368199999988 seconds
+elapsed accuracy time = 278.41429560000006 seconds
+elapsed total time = 498.57797759999994 seconds
+Finished Adam - Learning Rate:0.001, Batch:1, Epoch:5
+
+Run Nadam - Learning Rate:0.001, Batch:1, Epoch:5
+accuracy = 0.9772
+elapsed build time = 379.9745057 seconds
+elapsed accuracy time = 278.50159429999985 seconds
+elapsed total time = 658.4760999999999 seconds
+Finished Nadam - Learning Rate:0.001, Batch:1, Epoch:5
+
+Run Adam - Learning Rate:0.001, Batch:4, Epoch:5
+accuracy = 0.9724
+elapsed build time = 58.22214860000031 seconds
+elapsed accuracy time = 278.10485500000004 seconds
+elapsed total time = 336.32700360000035 seconds
+Finished Adam - Learning Rate:0.001, Batch:4, Epoch:5
+
+Run Nadam - Learning Rate:0.001, Batch:4, Epoch:5
+accuracy = 0.9787
+elapsed build time = 100.75379820000035 seconds
+elapsed accuracy time = 279.0933304999994 seconds
+elapsed total time = 379.84712869999976 seconds
+Finished Nadam - Learning Rate:0.001, Batch:4, Epoch:5
+
+Run Adam - Learning Rate:0.001, Batch:16, Epoch:5
+accuracy = 0.9734
+elapsed build time = 17.48195450000003 seconds
+elapsed accuracy time = 278.78725680000025 seconds
+elapsed total time = 296.2692113000003 seconds
+Finished Adam - Learning Rate:0.001, Batch:16, Epoch:5
+
+Run Nadam - Learning Rate:0.001, Batch:16, Epoch:5
+accuracy = 0.9783
+elapsed build time = 28.543174000000363 seconds
+elapsed accuracy time = 278.62520380000024 seconds
+elapsed total time = 307.1683778000006 seconds
+Finished Nadam - Learning Rate:0.001, Batch:16, Epoch:5
+
+Run Adam - Learning Rate:0.001, Batch:64, Epoch:5
+accuracy = 0.9663
+elapsed build time = 8.253699299999425 seconds
+elapsed accuracy time = 278.3810639000003 seconds
+elapsed total time = 286.6347631999997 seconds
+Finished Adam - Learning Rate:0.001, Batch:64, Epoch:5
+
+Run Nadam - Learning Rate:0.001, Batch:64, Epoch:5
+accuracy = 0.9673
+elapsed build time = 10.603081199999906 seconds
+elapsed accuracy time = 278.48317940000015 seconds
+elapsed total time = 289.08626060000006 seconds
+Finished Nadam - Learning Rate:0.001, Batch:64, Epoch:5
+
+Run Adam - Learning Rate:0.001, Batch:32, Epoch:5
+accuracy = 0.9723
+elapsed build time = 10.832933900000171 seconds
+elapsed accuracy time = 278.89755439999954 seconds
+elapsed total time = 289.7304882999997 seconds
+Finished Adam - Learning Rate:0.001, Batch:32, Epoch:5
+
+Run Nadam - Learning Rate:0.001, Batch:32, Epoch:5
+accuracy = 0.9744
+elapsed build time = 17.11493679999967 seconds
+elapsed accuracy time = 277.9056771000005 seconds
+elapsed total time = 295.02061390000017 seconds
+Finished Nadam - Learning Rate:0.001, Batch:32, Epoch:5
+
+Run Adam - Learning Rate:0.001, Batch:32, Epoch:10
+accuracy = 0.9764
+elapsed build time = 19.38236809999944 seconds
+elapsed accuracy time = 278.21584059999986 seconds
+elapsed total time = 297.5982086999993 seconds
+Finished Adam - Learning Rate:0.001, Batch:32, Epoch:10
+
+Run Nadam - Learning Rate:0.001, Batch:32, Epoch:10
+accuracy = 0.9799
+elapsed build time = 31.18406060000052 seconds
+elapsed accuracy time = 279.10022299999946 seconds
+elapsed total time = 310.2842836 seconds
+Finished Nadam - Learning Rate:0.001, Batch:32, Epoch:10
+
+Run Adam - Learning Rate:0.001, Batch:32, Epoch:15
+accuracy = 0.9799
+elapsed build time = 28.125348000000486 seconds
+elapsed accuracy time = 279.0678896999998 seconds
+elapsed total time = 307.1932377000003 seconds
+Finished Adam - Learning Rate:0.001, Batch:32, Epoch:15
+
+Run Nadam - Learning Rate:0.001, Batch:32, Epoch:15
+accuracy = 0.9799
+elapsed build time = 45.180870300000606 seconds
+elapsed accuracy time = 278.35860929999944 seconds
+elapsed total time = 323.53947960000005 seconds
+Finished Nadam - Learning Rate:0.001, Batch:32, Epoch:15
+
+Run Adam - Learning Rate:0.001, Batch:32, Epoch:20
+accuracy = 0.9794
+elapsed build time = 36.433006999999634 seconds
+elapsed accuracy time = 278.71602950000033 seconds
+elapsed total time = 315.14903649999997 seconds
+Finished Adam - Learning Rate:0.001, Batch:32, Epoch:20
+
+Run Nadam - Learning Rate:0.001, Batch:32, Epoch:20
+accuracy = 0.981
+elapsed build time = 59.3695631999999 seconds
+elapsed accuracy time = 279.42646590000004 seconds
+elapsed total time = 338.79602909999994 seconds
+Finished Nadam - Learning Rate:0.001, Batch:32, Epoch:20
+
