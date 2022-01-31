@@ -19,9 +19,10 @@ from keras.utils import np_utils
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
-def run(learningRate, batchSize, epochNumber, optimizer):
+def run(learningRate, batchSize, epochNumber, optimizer, outfile):
     name = str(optimizer).split(".")[-1:][0].rstrip("'>")
     print(f"Run {name} - Learning Rate:{learningRate}, Batch:{batchSize}, Epoch:{epochNumber}")
+    print(f"Run {name} - Learning Rate:{learningRate}, Batch:{batchSize}, Epoch:{epochNumber}", file=outFile)
     # start the timer
     start_t = timer()
     # number of input, hidden and output nodes
@@ -78,7 +79,7 @@ def run(learningRate, batchSize, epochNumber, optimizer):
 
     # scorecard for how well the network performs, initially empty
     scorecard = []
-
+    endbuildTime = timer()
     # go through all the data in the test data set, one by one
     for record in test_data_list:
         # split the record by the ',' commas
@@ -105,10 +106,20 @@ def run(learningRate, batchSize, epochNumber, optimizer):
     # calculate the accuracy, the fraction of correct answers
     scorecard_array = np.asarray(scorecard)
     print("accuracy = {}".format(scorecard_array.sum() / scorecard_array.size))  
+    print("accuracy = {}".format(scorecard_array.sum() / scorecard_array.size), file=outFile)  
 
     # stop the timer
     end_t = timer()
-    print("elapsed time = {} seconds".format(end_t-start_t))
+    print("elapsed build time = {} seconds".format(endbuildTime-start_t))
+    print("elapsed accuracy time = {} seconds".format(end_t-endbuildTime))
+    print("elapsed total time = {} seconds".format(end_t-start_t))
+    print("elapsed build time = {} seconds".format(endbuildTime-start_t), file=outFile)
+    print("elapsed accuracy time = {} seconds".format(end_t-endbuildTime), file=outFile)
+    print("elapsed total time = {} seconds".format(end_t-start_t), file=outFile)
+    print(f"Finished {name} - Learning Rate:{learningRate}, Batch:{batchSize}, Epoch:{epochNumber}")
+    print(f"Finished {name} - Learning Rate:{learningRate}, Batch:{batchSize}, Epoch:{epochNumber}", file=outFile)
+    print("")
+    print("", file=outFile)
 
 if __name__ == "__main__":
     defaultLearningRate = 0.001
@@ -116,17 +127,19 @@ if __name__ == "__main__":
     defaultNumberEpochs = 5
     Adam = keras.optimizers.Adam
     Nadam = keras.optimizers.Nadam
-    run(defaultLearningRate, defaultBatchSize, defaultNumberEpochs, Nadam)
-    exit(0)
-
-    for lr in [0.1, 0.01, 0.001, 0.001]:
-        run(lr, defaultBatchSize, defaultNumberEpochs, Adam)
-        run(lr, defaultBatchSize, defaultNumberEpochs, Nadam)
+    fname = "output.txt"
+    outFile = open(fname, "w")
+    for lr in [0.1, 0.01, 0.001, 0.0001]:
+        run(lr, defaultBatchSize, defaultNumberEpochs, Adam, outFile)
+        run(lr, defaultBatchSize, defaultNumberEpochs, Nadam, outFile)
 
     for batch in [1, 4, 16, 64]:
-        run(defaultLearningRate, batch, defaultNumberEpochs, Adam)
-        run(defaultLearningRate, batch, defaultNumberEpochs, Nadam)
+        run(defaultLearningRate, batch, defaultNumberEpochs, Adam, outFile)
+        run(defaultLearningRate, batch, defaultNumberEpochs, Nadam, outFile)
 
     for epoch in [5, 10, 15, 20]:
-        run(defaultLearningRate, defaultBatchSize, epoch, Adam)
-        run(defaultLearningRate, defaultBatchSize, epoch, Nadam)
+        run(defaultLearningRate, defaultBatchSize, epoch, Adam, outFile)
+        run(defaultLearningRate, defaultBatchSize, epoch, Nadam, outFile)
+    
+    outFile.close()
+
