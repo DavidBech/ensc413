@@ -21,15 +21,21 @@ def read_img(file):
 
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     gray_blur = cv2.blur(gray, (5, 5))
+    #cv2.imshow("gray", gray)
+    #cv2.waitKey(0)
+    #cv2.imshow("gray_blur", gray_blur)
+    #cv2.waitKey(0)
     return img, gray_blur
 
 
 # Canny edge detection
-def canny_edge(img, sigma=0.33):
-    v = np.median(img)
+def canny_edge(img, sigma=0.0):
+    v = np.median(img)/3
     lower = int(max(0, (1.0 - sigma) * v))
     upper = int(min(255, (1.0 + sigma) * v))
     edges = cv2.Canny(img, lower, upper)
+    cv2.imshow("edge", edges)
+    cv2.waitKey(0)
     return edges
 
 
@@ -119,7 +125,8 @@ def write_crop_images(img, points, img_count, folder_path='./raw_data/'):
         for s in row:
             # ratio_h = 2
             # ratio_w = 1
-            base_len = math.dist(points[s], points[s + 1])
+            #base_len = math.dist(points[s], points[s + 1])
+            base_len = math.sqrt(sum((px -qx)**2.0 for px, qx in zip(points[s], points[s + 1])))
             bot_left, bot_right = points[s], points[s + 1]
             start_x, start_y = int(bot_left[0]), int(bot_left[1] - (base_len * 2))
             end_x, end_y = int(bot_right[0]), int(bot_right[1])
@@ -127,18 +134,21 @@ def write_crop_images(img, points, img_count, folder_path='./raw_data/'):
                 start_y = 0
             cropped = img[start_y: end_y, start_x: end_x]
             img_count += 1
+            if np.shape(cropped)[0] is 0 or np.shape(cropped)[1] is 0:
+                continue
             cv2.imwrite('./raw_data/alpha_data_image' + str(img_count) + '.jpeg', cropped)
-            # print(folder_path + 'data' + str(img_count) + '.jpeg')
+            print(folder_path + 'data' + str(img_count) + '.jpeg')
     return img_count
 
 
 # Create a list of image file names
 img_filename_list = []
-folder_name = './test_data/*'
+folder_name = './test_data/imag/*'
 for path_name in glob.glob(folder_name):
     # file_name = re.search("[\w-]+\.\w+", path_name) (use if in same folder)
     img_filename_list.append(path_name)  # file_name.group()
 
+print(img_filename_list)
 # Create and save cropped images from original images to the data folder
 img_count = 20000
 print_number = 0
