@@ -34,16 +34,16 @@ def canny_edge(img, sigma=0.0):
     lower = int(max(0, (1.0 - sigma) * v))
     upper = int(min(255, (1.0 + sigma) * v))
     edges = cv2.Canny(img, lower, upper)
-    cv2.imshow("edge", edges)
-    cv2.waitKey(0)
+    #cv2.imshow("edge", edges)
+    #cv2.waitKey(0)
     return edges
 
 
 # Hough line detection
 def hough_line(edges, min_line_length=100, max_line_gap=10):
-    lines = cv2.HoughLines(edges, 1, np.pi / 180, 125, min_line_length, max_line_gap)
-    lines = np.reshape(lines, (-1, 2))
-    return lines
+    lines1 = cv2.HoughLines(edges, 1, np.pi / 180, 125, min_line_length, max_line_gap)
+    lines = np.reshape(lines1, (-1, 2))
+    return lines1, lines
 
 
 # Separate line into horizontal and vertical
@@ -159,8 +159,22 @@ for file_name in img_filename_list:
     print(np.shape(gray_blur))
     edges = canny_edge(gray_blur)
     print('edges: ' + str(np.shape(edges)))
-    lines = hough_line(edges)
+    raw, lines = hough_line(edges)
     print('line: ' + str(np.shape(lines)))
+
+    for i in range(0, len(raw)):
+        rho = raw[i][0][0]
+        theta = raw[i][0][1]
+        a = math.cos(theta)
+        b = math.sin(theta)
+        x0 = a*rho
+        y0 = b*rho
+        pt1  = (int(x0 + 1000*(-b)), int(y0 + 1000*a))
+        pt2  = (int(x0 - 1000*(-b)), int(y0 - 1000*a))
+        cv2.line(img, pt1, pt2, (0,0,255), 3, cv2.LINE_AA)
+    cv2.imshow("lines", img)
+    cv2.waitKey(0)
+
     h_lines, v_lines = h_v_lines(lines)
     assert len(h_lines) >= 11
     assert len(v_lines) >= 11
