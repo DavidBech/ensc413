@@ -34,7 +34,7 @@ def canny_edge(img, sigma=0.0):
     lower = int(max(0, (1.0 - sigma) * v))
     upper = int(min(255, (1.0 + sigma) * v))
     edges = cv2.Canny(img, lower, upper)
-    #cv2.imshow("edge", edges)
+    cv2.imshow("edge", edges)
     #cv2.waitKey(0)
     return edges
 
@@ -143,25 +143,32 @@ def write_crop_images(img, points, img_count, folder_path='./raw_data/'):
 
 # Create a list of image file names
 img_filename_list = []
-folder_name = './test_data/imag/*'
+folder_name = './test_data/imag/r13*'
 for path_name in glob.glob(folder_name):
     # file_name = re.search("[\w-]+\.\w+", path_name) (use if in same folder)
     img_filename_list.append(path_name)  # file_name.group()
 
 print(img_filename_list)
 # Create and save cropped images from original images to the data folder
-img_count = 20000
+#img_count = 20000
 print_number = 0
 for file_name in img_filename_list:
     print(file_name)
-    img, gray_blur = read_img(file_name)
-    print(np.shape(img))
-    print(np.shape(gray_blur))
-    edges = canny_edge(gray_blur)
-    print('edges: ' + str(np.shape(edges)))
-    raw, lines = hough_line(edges)
-    print('line: ' + str(np.shape(lines)))
 
+    # get grayscale image
+    img, gray_blur = read_img(file_name)
+    #print(np.shape(img))
+    #print(np.shape(gray_blur))
+
+    # get edges in image
+    edges = canny_edge(gray_blur, 2)
+    #print('edges: ' + str(np.shape(edges)))
+
+    # get hough lines from edges
+    raw, lines = hough_line(edges)
+    #print('line: ' + str(np.shape(lines)))
+
+    # display lines on image
     for i in range(0, len(raw)):
         rho = raw[i][0][0]
         theta = raw[i][0][1]
@@ -173,22 +180,35 @@ for file_name in img_filename_list:
         pt2  = (int(x0 - 1000*(-b)), int(y0 - 1000*a))
         cv2.line(img, pt1, pt2, (0,0,255), 3, cv2.LINE_AA)
     cv2.imshow("lines", img)
-    cv2.waitKey(0)
 
     h_lines, v_lines = h_v_lines(lines)
-    assert len(h_lines) >= 11
-    assert len(v_lines) >= 11
-    print('h_lines: ' + str(np.shape(h_lines)))
-    print('v_lines: ' + str(np.shape(v_lines)))
+    #assert len(h_lines) >= 11
+    #assert len(v_lines) >= 11
+    #print('h_lines: ' + str(np.shape(h_lines)))
+    #print('v_lines: ' + str(np.shape(v_lines)))
+
     intersection_points = line_intersections(h_lines, v_lines)
-    print('lines: ' + str(np.shape(intersection_points)))
+    #print('lines: ' + str(np.shape(intersection_points)))
+    #print(f"intersectionPoints {intersection_points}")
+
+
     points = cluster_points(intersection_points)
     # if np.shape(points)[0] < 100:
     #     continue
-    points = augment_points(points)
-    print('points: ' + str(np.shape(points)))
-    img_count = write_crop_images(img, points, img_count)
-    print('img_count: ' + str(img_count))
-    print('PRINTED')
-    print_number += 1
-print(print_number)
+    #points = augment_points(points)
+
+
+    for i, point in enumerate(points):
+        #print(f"{point[0]} {point[1]}")
+        #img = cv2.circle(img, (int(point[0]), int(point[1])), radius = 1, color=(255,0,0), thickness=-1)
+        cv2.putText(img, str(i), (int(point[0]), int(point[1])), cv2.FONT_HERSHEY_SIMPLEX, 1, (209,80,0,255), 3)
+    print(len(points))
+    cv2.imshow("point", img)
+
+    #print('points: ' + str(np.shape(points)))
+    #img_count = write_crop_images(img, points, img_count)
+    #print('img_count: ' + str(img_count))
+    #print('PRINTED')
+    #print_number += 1
+    cv2.waitKey(0)
+#print(print_number)
