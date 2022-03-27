@@ -179,7 +179,7 @@ for file_name in img_filename_list:
     img, gray_blur = read_img(file_name)
 
     # get edges in image
-    edges = canny_edge(gray_blur, 2)
+    edges = canny_edge(gray_blur, 1)
 
     # get hough lines from edges
     raw, lines = hough_line(edges)
