@@ -140,6 +140,26 @@ def write_crop_images(img, points, img_count, folder_path='./raw_data/'):
             print(folder_path + 'data' + str(img_count) + '.jpeg')
     return img_count
 
+def writeSquaresToFile(img, midPoints, cornerPoints, imgName, folder="./raw_data/"):
+    topMultiplier = 4
+    otherDirMultiplier = 1.25
+
+    for row in range(8):
+        for column in range(8):
+            midpoint = midPoints[row][column]
+            topLeft = cornerPoints[row][column]
+            topRight = cornerPoints[row][column+1]
+            bottomLeft = cornerPoints[row+1][column]
+            bottomRight = cornerPoints[row+1][column+1]
+            halfWidth = max(abs(midpoint[0]-bottomRight[0]), abs(midpoint[0]-bottomLeft[0]), abs(midpoint[0]-topLeft[0]), abs(midpoint[0]-topRight[0]))
+            halfHeight = max(abs(midpoint[1]-bottomRight[1]), abs(midpoint[1]-bottomLeft[1]), abs(midpoint[1]-topLeft[1]), abs(midpoint[1]-topRight[1]))
+            
+            startX = max(int(midpoint[0] - halfWidth*otherDirMultiplier), 0)
+            endX = max(int(midpoint[0] + halfWidth*otherDirMultiplier), 0)
+            startY = max(int(midpoint[1] - halfHeight*topMultiplier), 0)
+            endY = max(int(midpoint[1] + halfHeight*otherDirMultiplier), 0)
+            croppedImg = img [startY: endY, startX: endX]
+            cv2.imwrite(folder + imgName.split("\\")[-1] + string.ascii_lowercase[row] + str(column) + ".jpeg", croppedImg)
 
 # Create a list of image file names
 img_filename_list = []
@@ -165,17 +185,17 @@ for file_name in img_filename_list:
     raw, lines = hough_line(edges)
 
     # display lines on image
-    img0 = img.copy()
-    for i in range(0, len(raw)):
-        rho = raw[i][0][0]
-        theta = raw[i][0][1]
-        a = math.cos(theta)
-        b = math.sin(theta)
-        x0 = a*rho
-        y0 = b*rho
-        pt1  = (int(x0 + 1000*(-b)), int(y0 + 1000*a))
-        pt2  = (int(x0 - 1000*(-b)), int(y0 - 1000*a))
-        cv2.line(img0, pt1, pt2, (0,0,255), 3, cv2.LINE_AA)
+    #img0 = img.copy()
+    #for i in range(0, len(raw)):
+    #    rho = raw[i][0][0]
+    #    theta = raw[i][0][1]
+    #    a = math.cos(theta)
+    #    b = math.sin(theta)
+    #    x0 = a*rho
+    #    y0 = b*rho
+    #    pt1  = (int(x0 + 1000*(-b)), int(y0 + 1000*a))
+    #    pt2  = (int(x0 - 1000*(-b)), int(y0 - 1000*a))
+    #    cv2.line(img0, pt1, pt2, (0,0,255), 3, cv2.LINE_AA)
     #cv2.imshow("lines", img0)
 
     # separate horizontal and vertical lines from hough lines
@@ -195,9 +215,8 @@ for file_name in img_filename_list:
         print ("not enough intersection points")
         assert False
     elif len(points) > 81:
-        print("too many points")
-        assert False
-        # TODO
+        #TODO this could become a problem later
+        pass
 
     rows = [[]]*9
     for i in range(9):
@@ -224,6 +243,8 @@ for file_name in img_filename_list:
             cv2.putText(img4, string.ascii_lowercase[r] + str(i+1), (int(point[0]), int(point[1])), cv2.FONT_HERSHEY_SIMPLEX, 1, (209,80,0,255), 3)
     cv2.imshow("mid point", img4)
 
+
+    writeSquaresToFile(img, tileMidPoints, rows, file_name)
     #print('points: ' + str(np.shape(points)))
     #img_count = write_crop_images(img, points, img_count)
     #print('img_count: ' + str(img_count))
