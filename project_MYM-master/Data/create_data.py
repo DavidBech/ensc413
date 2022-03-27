@@ -7,7 +7,7 @@ import scipy.spatial as spatial
 import scipy.cluster as cluster
 from collections import defaultdict
 from statistics import mean
-
+import string
 
 # Read image and do lite image processing
 def read_img(file):
@@ -34,7 +34,7 @@ def canny_edge(img, sigma=0.0):
     lower = int(max(0, (1.0 - sigma) * v))
     upper = int(min(255, (1.0 + sigma) * v))
     edges = cv2.Canny(img, lower, upper)
-    cv2.imshow("edge", edges)
+    #cv2.imshow("edge", edges)
     #cv2.waitKey(0)
     return edges
 
@@ -157,18 +157,15 @@ for file_name in img_filename_list:
 
     # get grayscale image
     img, gray_blur = read_img(file_name)
-    #print(np.shape(img))
-    #print(np.shape(gray_blur))
 
     # get edges in image
     edges = canny_edge(gray_blur, 2)
-    #print('edges: ' + str(np.shape(edges)))
 
     # get hough lines from edges
     raw, lines = hough_line(edges)
-    #print('line: ' + str(np.shape(lines)))
 
     # display lines on image
+    img0 = img.copy()
     for i in range(0, len(raw)):
         rho = raw[i][0][0]
         theta = raw[i][0][1]
@@ -178,32 +175,54 @@ for file_name in img_filename_list:
         y0 = b*rho
         pt1  = (int(x0 + 1000*(-b)), int(y0 + 1000*a))
         pt2  = (int(x0 - 1000*(-b)), int(y0 - 1000*a))
-        cv2.line(img, pt1, pt2, (0,0,255), 3, cv2.LINE_AA)
-    cv2.imshow("lines", img)
+        cv2.line(img0, pt1, pt2, (0,0,255), 3, cv2.LINE_AA)
+    #cv2.imshow("lines", img0)
 
+    # separate horizontal and vertical lines from hough lines
     h_lines, v_lines = h_v_lines(lines)
-    #assert len(h_lines) >= 11
-    #assert len(v_lines) >= 11
-    #print('h_lines: ' + str(np.shape(h_lines)))
-    #print('v_lines: ' + str(np.shape(v_lines)))
-
+    # get intersection points of horizontal and vertical lines
     intersection_points = line_intersections(h_lines, v_lines)
-    #print('lines: ' + str(np.shape(intersection_points)))
-    #print(f"intersectionPoints {intersection_points}")
-
-
+    # make points close together into one point
     points = cluster_points(intersection_points)
-    # if np.shape(points)[0] < 100:
-    #     continue
-    #points = augment_points(points)
 
+    #img2 = img.copy()
+    #for i, point in enumerate(points):
+    #    #img2 = cv2.circle(img2, (int(point[0]), int(point[1])), radius = 1, color=(255,0,0), thickness=-1)
+    #    cv2.putText(img2, str(i), (int(point[0]), int(point[1])), cv2.FONT_HERSHEY_SIMPLEX, 1, (209,80,0,255), 3)
+    #cv2.imshow("point", img2)
 
-    for i, point in enumerate(points):
-        #print(f"{point[0]} {point[1]}")
-        #img = cv2.circle(img, (int(point[0]), int(point[1])), radius = 1, color=(255,0,0), thickness=-1)
-        cv2.putText(img, str(i), (int(point[0]), int(point[1])), cv2.FONT_HERSHEY_SIMPLEX, 1, (209,80,0,255), 3)
-    print(len(points))
-    cv2.imshow("point", img)
+    if len(points) < 81:
+        print ("not enough intersection points")
+        assert False
+    elif len(points) > 81:
+        print("too many points")
+        assert False
+        # TODO
+
+    rows = [[]]*9
+    for i in range(9):
+        rows[i] = points[9*i:9*i+9]
+        rows[i] = sorted(rows[i], key = lambda k: [k[0], k[1]])
+
+    #img3 = img.copy()
+    #for r, row in enumerate(rows):
+    #    for i, point in enumerate(row):
+    #        cv2.putText(img3, str(r) + str(i), (int(point[0]), int(point[1])), cv2.FONT_HERSHEY_SIMPLEX, 1, (209,80,0,255), 3)
+    #cv2.imshow("row point", img3)
+
+    tileMidPoints = []
+    for i in range(8):
+        tileMidPoints.append([])
+        for j in range(8):
+            # x coord
+            tileMidPoints[i].append((0.25*(rows[i][j][0] + rows[i+1][j][0] + rows[i][j+1][0] + rows[i+1][j+1][0]), 0.25*(rows[i][j][1] + rows[i+1][j][1] + rows[i][j+1][1] + rows[i+1][j+1][1])))
+
+    img4 = img.copy()
+    for r, row in enumerate(tileMidPoints):
+        for i, point in enumerate(row):
+            img4 = cv2.circle(img4, (int(point[0]), int(point[1])), radius = 1, color=(255,0,0), thickness=-1)
+            cv2.putText(img4, string.ascii_lowercase[r] + str(i+1), (int(point[0]), int(point[1])), cv2.FONT_HERSHEY_SIMPLEX, 1, (209,80,0,255), 3)
+    cv2.imshow("mid point", img4)
 
     #print('points: ' + str(np.shape(points)))
     #img_count = write_crop_images(img, points, img_count)
