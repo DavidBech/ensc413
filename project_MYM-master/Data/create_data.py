@@ -9,6 +9,7 @@ from collections import defaultdict
 from statistics import mean
 import string
 import json
+import os
 
 # Read image and do lite image processing
 def read_img(file):
@@ -185,6 +186,33 @@ def writeSquaresToFile(img, midPoints, cornerPoints, imgName, json, folder="./ra
 
 
 if __name__ == "__main__":
+    # Make Target Directories
+    testOutPath = "test"
+    trainOutPath = "train"
+    dirNames=["BB","BK","BN","BP","BQ","BR","Empty","WB","WK","WN","WP","WQ","WR"]
+    
+    if not os.path.isdir("./" + testOutPath):
+        print(f"Test Directory Not found make one here(Y/N)? {os.getcwd()}")
+        x = input()
+        if x in ["Y", "y", "yes", "Yes"]:
+            os.mkdir("./" + testOutPath)
+        else:
+            exit(1)
+
+    if not os.path.isdir("./" + trainOutPath):
+        print(f"Train Directory Not found make one here(Y/N)? {os.getcwd()}")
+        x = input()
+        if x in ["Y", "y", "yes", "Yes"]:
+            os.mkdir("./" + trainOutPath)
+        else:
+            exit(1)
+
+    for root in [testOutPath, trainOutPath]:
+        for dir in dirNames:
+            dir_path = "./" + root + "/" + dir
+            if not os.path.isdir(dir_path):
+                os.mkdir(dir_path)
+
     # Create a list of image file names
     img_filename_list = []
     sub_folder = "real"
@@ -193,8 +221,6 @@ if __name__ == "__main__":
         # file_name = re.search("[\w-]+\.\w+", path_name) (use if in same folder)
         img_filename_list.append(path_name)  # file_name.group()
 
-    # Create and save cropped images from original images to the data folder
-    #img_count = 20000
     print_number = 0
     for file_name in img_filename_list:
         print(file_name)
