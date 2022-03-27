@@ -8,6 +8,7 @@ import scipy.cluster as cluster
 from collections import defaultdict
 from statistics import mean
 import string
+import json
 
 # Read image and do lite image processing
 def read_img(file):
@@ -140,12 +141,33 @@ def write_crop_images(img, points, img_count, folder_path='./raw_data/'):
             print(folder_path + 'data' + str(img_count) + '.jpeg')
     return img_count
 
-def writeSquaresToFile(img, midPoints, cornerPoints, imgName, folder="./raw_data/"):
+def writeSquaresToFile(img, midPoints, cornerPoints, imgName, json, folder="./raw_data/"):
     topMultiplier = 4
     otherDirMultiplier = 1.25
-
+    pieceToDir = {
+        "bishop_b": 'BB',
+        "king_b": 'BK',
+        "knight_b": 'BN',
+        "pawn_b": 'BP',
+        "queen_b": 'BQ',
+        "rook_b": 'BR',
+        #"": 'Empty',
+        "bishop_w": 'WB',
+        "king_w": 'WK',
+        "knight_w": 'WN',
+        "pawn_w": 'WP',
+        "queen_w": 'WQ',
+        "rook_w": 'WR',
+    }
     for row in range(8):
         for column in range(8):
+            locationString = string.ascii_uppercase[row] + str(column+1)
+            try:
+                #print(json["config"][locationString])
+                classificationFolder = pieceToDir[json["config"][locationString]]
+            except KeyError:
+                classificationFolder = "Empty"
+
             midpoint = midPoints[row][column]
             topLeft = cornerPoints[row][column]
             topRight = cornerPoints[row][column+1]
@@ -159,22 +181,22 @@ def writeSquaresToFile(img, midPoints, cornerPoints, imgName, folder="./raw_data
             startY = max(int(midpoint[1] - halfHeight*topMultiplier), 0)
             endY = max(int(midpoint[1] + halfHeight*otherDirMultiplier), 0)
             croppedImg = img [startY: endY, startX: endX]
-            cv2.imwrite(folder + (imgName.split("\\")[-1]).split(".")[0] + "_" + string.ascii_lowercase[row] + str(column+1) + ".jpeg", croppedImg)
+            cv2.imwrite(folder + classificationFolder + "/" + imgName + "_" + locationString + ".jpeg", croppedImg)
 
 # Create a list of image file names
 img_filename_list = []
-folder_name = './test_data/imag/r*'
+folder_name = './full_data/imag/r*'
 for path_name in glob.glob(folder_name):
     # file_name = re.search("[\w-]+\.\w+", path_name) (use if in same folder)
     img_filename_list.append(path_name)  # file_name.group()
 
-print(img_filename_list)
+#print(img_filename_list)
 # Create and save cropped images from original images to the data folder
 #img_count = 20000
 print_number = 0
 for file_name in img_filename_list:
     print(file_name)
-
+    imageName = file_name.split("\\")[-1].split(".")[0]
     # get grayscale image
     img, gray_blur = read_img(file_name)
 
@@ -236,15 +258,18 @@ for file_name in img_filename_list:
             # x coord
             tileMidPoints[i].append((0.25*(rows[i][j][0] + rows[i+1][j][0] + rows[i][j+1][0] + rows[i+1][j+1][0]), 0.25*(rows[i][j][1] + rows[i+1][j][1] + rows[i][j+1][1] + rows[i+1][j+1][1])))
 
-    img4 = img.copy()
-    for r, row in enumerate(tileMidPoints):
-        for i, point in enumerate(row):
-            img4 = cv2.circle(img4, (int(point[0]), int(point[1])), radius = 1, color=(255,0,0), thickness=-1)
-            cv2.putText(img4, string.ascii_lowercase[r] + str(i+1), (int(point[0]), int(point[1])), cv2.FONT_HERSHEY_SIMPLEX, 1, (209,80,0,255), 3)
-    cv2.imshow("mid point", img4)
+    #img4 = img.copy()
+    #for r, row in enumerate(tileMidPoints):
+    #    for i, point in enumerate(row):
+    #        img4 = cv2.circle(img4, (int(point[0]), int(point[1])), radius = 1, color=(255,0,0), thickness=-1)
+    #        cv2.putText(img4, string.ascii_lowercase[r] + str(i+1), (int(point[0]), int(point[1])), cv2.FONT_HERSHEY_SIMPLEX, 1, (209,80,0,255), 3)
+    #cv2.imshow("mid point", img4)
 
-
-    writeSquaresToFile(img, tileMidPoints, rows, file_name)
+    correspondingJson = "./full_data/json/" + imageName + ".json"
+    jsonFile = open(correspondingJson, "r")
+    data = json.load(jsonFile)
+    writeSquaresToFile(img, tileMidPoints, rows, imageName, data)
+    jsonFile.close()
     #print('points: ' + str(np.shape(points)))
     #img_count = write_crop_images(img, points, img_count)
     #print('img_count: ' + str(img_count))
