@@ -142,7 +142,7 @@ def write_crop_images(img, points, img_count, folder_path='./raw_data/'):
             print(folder_path + 'data' + str(img_count) + '.jpeg')
     return img_count
 
-def writeSquaresToFile(img, midPoints, cornerPoints, imgName, json, folder="./raw_data/"):
+def writeSquaresToFile(img, midPoints, cornerPoints, imgName, json, folder="./train/"):
     topMultiplier = 4
     otherDirMultiplier = 1.25
     pieceToDir = {
@@ -217,13 +217,13 @@ if __name__ == "__main__":
     img_filename_list = []
     sub_folder = "real"
     folder_name = './full_data/' + sub_folder + '/imag/*'
+    successCount = 0
+    failCount = 0
     for path_name in glob.glob(folder_name):
         # file_name = re.search("[\w-]+\.\w+", path_name) (use if in same folder)
         img_filename_list.append(path_name)  # file_name.group()
 
-    print_number = 0
     for file_name in img_filename_list:
-        print(file_name)
         imageName = file_name.split("\\")[-1].split(".")[0]
         # get grayscale image
         img, gray_blur = read_img(file_name)
@@ -255,18 +255,18 @@ if __name__ == "__main__":
         # make points close together into one point
         points = cluster_points(intersection_points)
 
-        #img2 = img.copy()
-        #for i, point in enumerate(points):
-        #    #img2 = cv2.circle(img2, (int(point[0]), int(point[1])), radius = 1, color=(255,0,0), thickness=-1)
-        #    cv2.putText(img2, str(i), (int(point[0]), int(point[1])), cv2.FONT_HERSHEY_SIMPLEX, 1, (209,80,0,255), 3)
-        #cv2.imshow("point", img2)
-
-        if len(points) < 81:
-            print ("not enough intersection points")
-            assert False
-        elif len(points) > 81:
-            #TODO this could become a problem later
-            pass
+        if len(points) > 81:
+            points = points[:len(points)-9]
+        if len(points) != 81:
+            #img2 = img.copy()
+            #for i, point in enumerate(points):
+            #    #img2 = cv2.circle(img2, (int(point[0]), int(point[1])), radius = 1, color=(255,0,0), thickness=-1)
+            #    cv2.putText(img2, str(i), (int(point[0]), int(point[1])), cv2.FONT_HERSHEY_SIMPLEX, 1, (209,80,0,255), 3)
+            #cv2.imshow("point", img2)
+            #cv2.waitKey(0)
+            print(f"Skipping -- {imageName}")
+            failCount +=1 
+            continue
 
         rows = [[]]*9
         for i in range(9):
@@ -292,8 +292,9 @@ if __name__ == "__main__":
         #        img4 = cv2.circle(img4, (int(point[0]), int(point[1])), radius = 1, color=(255,0,0), thickness=-1)
         #        cv2.putText(img4, string.ascii_lowercase[r] + str(i+1), (int(point[0]), int(point[1])), cv2.FONT_HERSHEY_SIMPLEX, 1, (209,80,0,255), 3)
         #cv2.imshow("mid point", img4)
+        #cv2.waitKey(0)
 
-        correspondingJson = "./full_data" + sub_folder + "json/" + imageName + ".json"
+        correspondingJson = "./full_data/" + sub_folder + "/json/" + imageName + ".json"
         jsonFile = open(correspondingJson, "r")
         data = json.load(jsonFile)
         writeSquaresToFile(img, tileMidPoints, rows, imageName, data)
@@ -303,5 +304,8 @@ if __name__ == "__main__":
         #print('img_count: ' + str(img_count))
         #print('PRINTED')
         #print_number += 1
-        cv2.waitKey(0)
+        print(file_name)
+        successCount += 1
     #print(print_number)
+
+    print(f"Finished\n\tsuccess:{successCount}\n\tfail:{failCount}")
