@@ -10,6 +10,7 @@ from statistics import mean
 import string
 import json
 import os
+import random 
 
 # Read image and do lite image processing
 def read_img(file):
@@ -142,7 +143,7 @@ def write_crop_images(img, points, img_count, folder_path='./raw_data/'):
             print(folder_path + 'data' + str(img_count) + '.jpeg')
     return img_count
 
-def writeSquaresToFile(img, midPoints, cornerPoints, imgName, json, folder="./train/"):
+def writeSquaresToFile(img, midPoints, cornerPoints, imgName, json):
     topMultiplier = 4
     otherDirMultiplier = 1.25
     pieceToDir = {
@@ -162,6 +163,8 @@ def writeSquaresToFile(img, midPoints, cornerPoints, imgName, json, folder="./tr
     }
     for row in range(8):
         for column in range(8):
+            folder = trainOutPath if random.random() > test_percent else testOutPath
+            folder = "./" + folder + "/"
             locationString = string.ascii_uppercase[row] + str(column+1)
             try:
                 #print(json["config"][locationString])
@@ -185,10 +188,12 @@ def writeSquaresToFile(img, midPoints, cornerPoints, imgName, json, folder="./tr
             cv2.imwrite(folder + classificationFolder + "/" + imgName + "_" + locationString + ".jpeg", croppedImg)
 
 
+testOutPath = "test"
+trainOutPath = "train"
+test_percent = 0.1
+
 if __name__ == "__main__":
     # Make Target Directories
-    testOutPath = "test"
-    trainOutPath = "train"
     dirNames=["BB","BK","BN","BP","BQ","BR","Empty","WB","WK","WN","WP","WQ","WR"]
     
     if not os.path.isdir("./" + testOutPath):
@@ -297,8 +302,9 @@ if __name__ == "__main__":
         correspondingJson = "./full_data/" + sub_folder + "/json/" + imageName + ".json"
         jsonFile = open(correspondingJson, "r")
         data = json.load(jsonFile)
-        writeSquaresToFile(img, tileMidPoints, rows, imageName, data)
         jsonFile.close()
+
+        writeSquaresToFile(img, tileMidPoints, rows, imageName, data)
         #print('points: ' + str(np.shape(points)))
         #img_count = write_crop_images(img, points, img_count)
         #print('img_count: ' + str(img_count))
