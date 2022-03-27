@@ -159,11 +159,11 @@ def writeSquaresToFile(img, midPoints, cornerPoints, imgName, folder="./raw_data
             startY = max(int(midpoint[1] - halfHeight*topMultiplier), 0)
             endY = max(int(midpoint[1] + halfHeight*otherDirMultiplier), 0)
             croppedImg = img [startY: endY, startX: endX]
-            cv2.imwrite(folder + imgName.split("\\")[-1] + string.ascii_lowercase[row] + str(column) + ".jpeg", croppedImg)
+            cv2.imwrite(folder + (imgName.split("\\")[-1]).split(".")[0] + "_" + string.ascii_lowercase[row] + str(column+1) + ".jpeg", croppedImg)
 
 # Create a list of image file names
 img_filename_list = []
-folder_name = './test_data/imag/r13*'
+folder_name = './test_data/imag/r*'
 for path_name in glob.glob(folder_name):
     # file_name = re.search("[\w-]+\.\w+", path_name) (use if in same folder)
     img_filename_list.append(path_name)  # file_name.group()
