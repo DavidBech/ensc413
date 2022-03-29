@@ -1,4 +1,5 @@
 import math
+from tkinter import W
 import cv2
 import numpy as np
 import scipy.spatial as spatial
@@ -7,6 +8,50 @@ from collections import defaultdict
 from statistics import mean
 import string
 import random 
+
+def displayImage(img):
+    cv2.imshow("img", img)
+    cv2.waitKey(0)
+
+def addLinesToImage(img, lines):
+    # display lines on image
+    img0 = img.copy()
+    for i in range(0, len(lines)):
+        rho = lines[i][0][0]
+        theta = lines[i][0][1]
+        a = math.cos(theta)
+        b = math.sin(theta)
+        x0 = a*rho
+        y0 = b*rho
+        pt1  = (int(x0 + 1000*(-b)), int(y0 + 1000*a))
+        pt2  = (int(x0 - 1000*(-b)), int(y0 - 1000*a))
+        cv2.line(img0, pt1, pt2, (0,0,255), 3, cv2.LINE_AA)
+    return img0
+
+def addPointsToImage(img, points):
+    img2 = img.copy()
+    for i, point in enumerate(points):
+        img2 = cv2.circle(img2, (int(point[0]), int(point[1])), radius = 1, color=(255,0,0), thickness=-1)
+        #cv2.putText(img2, str(i), (int(point[0]), int(point[1])), cv2.FONT_HERSHEY_SIMPLEX, 1, (209,80,0,255), 3)
+    cv2.imshow("point", img2)
+    cv2.waitKey(0)
+
+def find_midpoints(points):
+    rows = [[]]*9
+    for i in range(9):
+        rows[i] = points[9*i:9*i+9]
+        rows[i] = sorted(rows[i], key = lambda k: [k[0], k[1]])
+
+    tileMidPoints = []
+    for i in range(8):
+        tileMidPoints.append([])
+        for j in range(8):
+            tileMidPoints[i].append((0.25*(rows[i][j][0] + rows[i+1][j][0] + rows[i][j+1][0] + rows[i+1][j+1][0]), 0.25*(rows[i][j][1] + rows[i+1][j][1] + rows[i][j+1][1] + rows[i+1][j+1][1])))
+            
+    return tileMidPoints, rows
+
+
+
 
 # Read image and do lite image processing
 def read_img(file):
@@ -20,10 +65,6 @@ def read_img(file):
 
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     gray_blur = cv2.blur(gray, (5, 5))
-    #cv2.imshow("gray", gray)
-    #cv2.waitKey(0)
-    #cv2.imshow("gray_blur", gray_blur)
-    #cv2.waitKey(0)
     return img, gray_blur
 
 

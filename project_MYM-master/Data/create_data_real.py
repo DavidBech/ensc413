@@ -72,20 +72,6 @@ if __name__ == "__main__":
         # get hough lines from edges
         raw, lines = create_data_common.hough_line(edges)
 
-        # display lines on image
-        #img0 = img.copy()
-        #for i in range(0, len(raw)):
-        #    rho = raw[i][0][0]
-        #    theta = raw[i][0][1]
-        #    a = math.cos(theta)
-        #    b = math.sin(theta)
-        #    x0 = a*rho
-        #    y0 = b*rho
-        #    pt1  = (int(x0 + 1000*(-b)), int(y0 + 1000*a))
-        #    pt2  = (int(x0 - 1000*(-b)), int(y0 - 1000*a))
-        #    cv2.line(img0, pt1, pt2, (0,0,255), 3, cv2.LINE_AA)
-        #cv2.imshow("lines", img0)
-
         # separate horizontal and vertical lines from hough lines
         h_lines, v_lines = create_data_common.h_v_lines(lines)
 
@@ -95,50 +81,24 @@ if __name__ == "__main__":
         # make points close together into one point
         points = create_data_common.cluster_points(intersection_points)
 
+        # make sure there are the correct quantity of points
         if len(points) > 81:
             points = points[:len(points)-9]
         if len(points) != 81:
-            #img2 = img.copy()
-            #for i, point in enumerate(points):
-            #    #img2 = cv2.circle(img2, (int(point[0]), int(point[1])), radius = 1, color=(255,0,0), thickness=-1)
-            #    cv2.putText(img2, str(i), (int(point[0]), int(point[1])), cv2.FONT_HERSHEY_SIMPLEX, 1, (209,80,0,255), 3)
-            #cv2.imshow("point", img2)
-            #cv2.waitKey(0)
             print(f"Skipping -- {imageName}")
             failCount +=1 
             continue
 
-        rows = [[]]*9
-        for i in range(9):
-            rows[i] = points[9*i:9*i+9]
-            rows[i] = sorted(rows[i], key = lambda k: [k[0], k[1]])
+        # sperate the points into rows and find the midpoints
+        tileMidPoints, rows = create_data_common.find_midpoints(points)
 
-        #img3 = img.copy()
-        #for r, row in enumerate(rows):
-        #    for i, point in enumerate(row):
-        #        cv2.putText(img3, str(r) + str(i), (int(point[0]), int(point[1])), cv2.FONT_HERSHEY_SIMPLEX, 1, (209,80,0,255), 3)
-        #cv2.imshow("row point", img3)
-
-        tileMidPoints = []
-        for i in range(8):
-            tileMidPoints.append([])
-            for j in range(8):
-                # x coord
-                tileMidPoints[i].append((0.25*(rows[i][j][0] + rows[i+1][j][0] + rows[i][j+1][0] + rows[i+1][j+1][0]), 0.25*(rows[i][j][1] + rows[i+1][j][1] + rows[i][j+1][1] + rows[i+1][j+1][1])))
-
-        #img4 = img.copy()
-        #for r, row in enumerate(tileMidPoints):
-        #    for i, point in enumerate(row):
-        #        img4 = cv2.circle(img4, (int(point[0]), int(point[1])), radius = 1, color=(255,0,0), thickness=-1)
-        #        cv2.putText(img4, string.ascii_lowercase[r] + str(i+1), (int(point[0]), int(point[1])), cv2.FONT_HERSHEY_SIMPLEX, 1, (209,80,0,255), 3)
-        #cv2.imshow("mid point", img4)
-        #cv2.waitKey(0)
-
+        # open the json file for the image
         correspondingJson = "./full_data/real/json/" + imageName + ".json"
         jsonFile = open(correspondingJson, "r")
         data = json.load(jsonFile)
         jsonFile.close()
 
+        # write the cropped image to a a file
         create_data_common.writeSquaresToFile(img, tileMidPoints, rows, imageName, data, trainOutPath, testOutPath, test_percent)
 
         print(file_name)
