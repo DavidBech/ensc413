@@ -139,7 +139,7 @@ def write_crop_images(img, points, img_count, folder_path='./raw_data/'):
             print(folder_path + 'data' + str(img_count) + '.jpeg')
     return img_count
 
-def writeSquaresToFile(img, midPoints, cornerPoints, imgName, json):
+def writeSquaresToFile(img, midPoints, cornerPoints, imgName, json, trainOutPath, testOutPath, test_percent):
     topMultiplier = 4
     otherDirMultiplier = 1.25
     pieceToDir = {
