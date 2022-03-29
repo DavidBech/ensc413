@@ -8,6 +8,45 @@ from collections import defaultdict
 from statistics import mean
 import string
 import random 
+import glob
+import os
+
+def setupDirs(testOutPath, trainOutPath):
+    # Make Target Directories
+    dirNames=["BB","BK","BN","BP","BQ","BR","Empty","WB","WK","WN","WP","WQ","WR"]
+    
+    ClearOldData = False
+    gotInput = False
+    for root in [testOutPath, trainOutPath]:
+        if gotInput:
+            break
+        for dir in dirNames:
+            dir_path = "./" + root + "/" + dir
+            if len(glob.glob(dir_path + "/*")) > 0:
+                print("Old images exist, Clear them(Y/N)?")
+                x = input()
+                if x in ["Y", "y", "yes", "Yes"]:
+                    ClearOldData = True
+                    gotInput = True
+                break
+     
+    # Make Directories to store cropped images
+    for root in [testOutPath, trainOutPath]:
+        if not os.path.isdir(root):
+            print(f"{root} --  directory Not found make one here(Y/N)? {os.getcwd()}")
+            x = input()
+            if x in ["Y", "y", "yes", "Yes"]:
+                os.mkdir("./" + testOutPath)
+            else:
+                exit(1)
+
+        for dir in dirNames:
+            dir_path = "./" + root + "/" + dir
+            if not os.path.isdir(dir_path):
+                os.mkdir(dir_path)
+            elif ClearOldData:
+                for file in glob.glob(dir_path + "/*"):
+                    os.remove(file)
 
 def displayImage(img):
     cv2.imshow("img", img)
