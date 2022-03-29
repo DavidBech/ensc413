@@ -190,7 +190,7 @@ def writeSquaresToFile(img, midPoints, cornerPoints, imgName, json):
 
 testOutPath = "test"
 trainOutPath = "train"
-test_percent = 0.1
+test_percent = 0.6
 
 if __name__ == "__main__":
     # Make Target Directories
