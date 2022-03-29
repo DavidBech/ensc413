@@ -1,4 +1,5 @@
-data
-raw_data
+project_MYM-master/Data/full_data/
+project_MYM-master/Data/test*
+project_MYM-master/Data/train*
 __pycache__
 *.h5
