@@ -36,7 +36,7 @@ def setupDirs(testOutPath, trainOutPath):
             print(f"{root} --  directory Not found make one here(Y/N)? {os.getcwd()}")
             x = input()
             if x in ["Y", "y", "yes", "Yes"]:
-                os.mkdir("./" + testOutPath)
+                os.mkdir("./" + root)
             else:
                 exit(1)
 
