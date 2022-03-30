@@ -30,7 +30,7 @@ def copyFiles(fromDir, toDir, namePreppend, copyPercent):
             if random.random() < copyPercent:
                 shutil.copy(fromPath + "/" + file, toPath + "/" + namePreppend + file)
                 coppiedCount += 1
-    print(f"Finished Copying")
+    print(f"Finished Copying: {coppiedCount} out of {fileCount}")
 
 if __name__ == "__main__":
     create_data_common.setupDirs(testOutPath, trainOutPath)
