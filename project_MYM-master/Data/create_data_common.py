@@ -49,7 +49,7 @@ def setupDirs(testOutPath, trainOutPath):
                     os.remove(file)
 
 def displayImage(img):
-    cv2.imshow("img", img)
+    cv2.imshow("image", img)
     cv2.waitKey(0)
 
 def addLinesToImage(img, lines):
@@ -68,12 +68,11 @@ def addLinesToImage(img, lines):
     return img0
 
 def addPointsToImage(img, points):
-    img2 = img.copy()
+    img0 = img.copy()
     for i, point in enumerate(points):
-        img2 = cv2.circle(img2, (int(point[0]), int(point[1])), radius = 1, color=(255,0,0), thickness=-1)
-        #cv2.putText(img2, str(i), (int(point[0]), int(point[1])), cv2.FONT_HERSHEY_SIMPLEX, 1, (209,80,0,255), 3)
-    cv2.imshow("point", img2)
-    cv2.waitKey(0)
+        img0 = cv2.circle(img0, (int(point[0]), int(point[1])), radius = 3, color=(0,255,0), thickness=-1)
+        #cv2.putText(img0, str(i), (int(point[0]), int(point[1])), cv2.FONT_HERSHEY_SIMPLEX, 1, (209,80,0,255), 3)
+    return img0
 
 def find_midpoints(points):
     rows = [[]]*9
