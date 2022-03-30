@@ -1,8 +1,6 @@
 import create_data_common 
-import os
 import glob
 import json
-import cv2
 
 # The location of train cropped images
 trainOutPath = "train_unity"
