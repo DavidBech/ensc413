@@ -8,7 +8,7 @@ import cv2
 trainOutPath = "train_unity"
 
 # The location of test cropped images
-testOutPath = "test_blender"
+testOutPath = "test_unity"
 
 # Expected percentage of test images
 test_percent = 0.4
@@ -18,7 +18,7 @@ if __name__ == "__main__":
     
     # Create a list of image file names
     img_filename_list = []
-    folder_name = "./full_data/synthetic_unity/imag/50*.jpg"
+    folder_name = "./full_data/synthetic_unity/imag/*.jpg"
     successCount = 0
     failCount = 0
 
