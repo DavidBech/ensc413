@@ -69,7 +69,7 @@ def trainModel(model, trainLoc, testLoc, weightName =""):
         validation_data= test_gen
     )
 
-    model.save_weidhts("model_" + weightName + "_weights.h5")
+    model.save_weights("model_" + weightName + "_weights.h5")
 
     return history
 

@@ -8,7 +8,7 @@ import glob
 includeRealTrain = True
 realTrainPercent = 1.00
 
-includeUnityTrain = True
+includeUnityTrain = False
 unityTrainPercent = 1.00
 
 includeBlenderTrain = False
@@ -67,14 +67,14 @@ if __name__ == "__main__":
         copyFiles("./train_blender", "./train", "blender", blenderTrainPercent)
 
     if includeRealTest:
-        print("Starting Copying Real Training Files")
+        print("Starting Copying Real Testing Files")
         copyFiles("./test_real", "./test", "real", realTestPercent)
 
     if includeUnityTest:
-        print("Starting Copying Unity Training Files")
+        print("Starting Copying Unity Testing Files")
         copyFiles("./test_unity", "./test", "unity", unityTestPercent)
     
     if includeBlenderTest:
-        print("Starting Copying Blender Training Files")
+        print("Starting Copying Blender Testing Files")
         copyFiles("./test_blender", "./test", "blender", blenderTestPercent)
 

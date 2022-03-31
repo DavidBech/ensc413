@@ -16,6 +16,8 @@ def generateClassifcationReport(model, test_gen):
     y_pred = np.argmax(Y_pred, axis= -1)
     print(sum(y_pred==classes)/800)
 
+    # TODO -- calculate Empty category separately
+
     # produce a confusion matrix
     data = confusion_matrix(classes, y_pred)
     df_cm = pd.DataFrame(data, columns=target_names, index = target_names)
@@ -31,7 +33,7 @@ def generateClassifcationReport(model, test_gen):
 
 
 if __name__ == "__main__":
-    modelWeightsFileName = ""
+    modelWeightsFileName = "model_temp_weights.h5"
     testLocation = "./Data/test"
     image_size = (224, 224)
     batch_size = 32
@@ -44,4 +46,4 @@ if __name__ == "__main__":
 
     test_gen = deepLearningModel.getTestGen(testLocation)
 
-    generateClassifcationReport(model, modelWeightsFileName, test_gen)
+    generateClassifcationReport(model, test_gen)
