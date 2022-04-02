@@ -5,3 +5,4 @@ __pycache__
 *.h5
 *.dat
 RunData
+Data/data_setup.json
