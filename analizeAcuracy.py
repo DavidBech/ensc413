@@ -1,5 +1,5 @@
 from contextlib import redirect_stdout
-from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.metrics import classification_report, confusion_matrix, matthews_corrcoef
 import numpy as np
 import seaborn as sn
 import matplotlib.pyplot as plt
@@ -74,6 +74,8 @@ def generateClassifcationReport(model, test_gen, location):
             print(normalizedData)
             print('Classification Report')
             print(classification_report(test_gen.classes[test_gen.index_array], y_pred, target_names=target_names))
+            print("MCC")
+            print(matthews_corrcoef(test_gen.classes[test_gen.index_array], y_pred))
 
 
 
@@ -93,7 +95,7 @@ if __name__ == "__main__":
 
     test_gen = deepLearningModel.getTestGen(testLocation)
 
-    #generateClassifcationReport(model, test_gen, dataLocation)
+    generateClassifcationReport(model, test_gen, dataLocation)
 
     histData = None
     with open(historyFileName, "r") as history:
