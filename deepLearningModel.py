@@ -1,8 +1,12 @@
+from contextlib import redirect_stdout
 from keras.applications.vgg16 import VGG16
 from keras.layers import Dense, Flatten
 from keras.models import Model
 from keras.preprocessing.image import ImageDataGenerator
 import pandas
+import os
+import shutil
+
 image_size = (224, 224)
 batch_size = 32
 epochs = 2
@@ -59,6 +63,18 @@ def getTrainGen(trainLocation):
     return train_gen
 
 def trainModel(model, trainLoc, testLoc, RunName =""):
+    dataDir = "./RunData/" + RunName + "/"
+    categories =  ['BB', 'BK', 'BN', 'BP', 'BQ', 'BR', 'Empty', 'WB', 'WK', 'WN', 'WP', 'WQ', 'WR']
+
+    os.mkdir(dataDir)
+
+    shutil.copy("./Data/data_setup.json", dataDir + "model_params.dat")
+
+    with open(dataDir + "model_params.dat", "a") as f:
+        with redirect_stdout(f):
+            print("\n\n\n")
+            model.summary()
+
     train_gen = getTrainGen(trainLoc)
     test_gen = getTestGen(testLoc)
 
@@ -69,11 +85,11 @@ def trainModel(model, trainLoc, testLoc, RunName =""):
         validation_data= test_gen
     )
 
-    model.save_weights("./RunData/model_" + RunName + "_weights.h5")
+    model.save_weights(dataDir + "/model_weights.h5")
 
     hist_data = pandas.DataFrame(history.history)
 
-    with open("./RunData/history_vals_" + RunName + ".dat", "w") as historyFile:
+    with open(dataDir + "model_history.dat", "w") as historyFile:
         hist_data.to_json(historyFile)
 
     historyFile.close()
