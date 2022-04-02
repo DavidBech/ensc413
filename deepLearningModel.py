@@ -9,7 +9,7 @@ import shutil
 
 image_size = (224, 224)
 batch_size = 32
-epochs = 2
+epochs = 10
 
 datagen = ImageDataGenerator(
         rotation_range=5,
