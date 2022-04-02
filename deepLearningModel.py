@@ -64,15 +64,17 @@ def getTrainGen(trainLocation):
 
 def trainModel(model, trainLoc, testLoc, RunName =""):
     dataDir = "./RunData/" + RunName + "/"
-    categories =  ['BB', 'BK', 'BN', 'BP', 'BQ', 'BR', 'Empty', 'WB', 'WK', 'WN', 'WP', 'WQ', 'WR']
-
-    os.mkdir(dataDir)
+    try:
+        os.mkdir(dataDir)
+    except FileExistsError:
+        print(f"Choose a different run name, {RunName} already has data")
+        exit(1)
 
     shutil.copy("./Data/data_setup.json", dataDir + "model_params.dat")
 
     with open(dataDir + "model_params.dat", "a") as f:
+        print(f"\n\n\nBatch Size:{batch_size}\n, Epochs:{epochs}", file=f)
         with redirect_stdout(f):
-            print("\n\n\n")
             model.summary()
 
     train_gen = getTrainGen(trainLoc)
