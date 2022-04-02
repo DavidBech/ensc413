@@ -44,6 +44,7 @@ def generateClassifcationReport(model, test_gen):
     plt.figure(figsize = (20,14))
     sn.set(font_scale=1.4)#for label size
     sn.heatmap(df_cm, cmap="Blues", annot=True,annot_kws={"size": 16})# font size
+    plt.show()
     print('Confusion Matrix')
     print(data)
     print('Classification Report')
@@ -52,18 +53,17 @@ def generateClassifcationReport(model, test_gen):
 
 if __name__ == "__main__":
     runName = "temp"
-    modelWeightsFileName = "./RunData/model_" + runName + "_weights.h5"
+    dataLocation = "./RunData/" + runName + "/"
     testLocation = "./Data/test"
     image_size = (224, 224)
     batch_size = 32
 
-    historyFileName = "./RunData/history_vals_" + runName + ".dat"
+    historyFileName = dataLocation + "model_history.dat"
+    modelWeightFileName = dataLocation + "model_weights.h5"
     
     model = deepLearningModel.getModel()
 
-    model.summary()
-
-    model.load_weights(modelWeightsFileName)
+    model.load_weights(modelWeightFileName)
 
     test_gen = deepLearningModel.getTestGen(testLocation)
 
