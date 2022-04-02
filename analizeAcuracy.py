@@ -4,7 +4,25 @@ import seaborn as sn
 import matplotlib.pyplot as plt
 import pandas as pd
 import deepLearningModel
+import json
 
+def plotHistory(history):
+    catAc = history["categorical_accuracy"]
+    valCatAc = history["val_categorical_accuracy"]
+    catAc_list = []
+    valCatAc_list = []
+    for key in catAc:
+        catAc_list.append(catAc[key])
+    for key in valCatAc:
+        valCatAc_list.append(valCatAc[key])
+
+    plt.plot(catAc_list, 'ko')
+    plt.plot(valCatAc_list, 'b')
+    plt.title('Accuracy vs Training Epoch')
+    plt.xlabel('Epoch')
+    plt.ylabel('Accuracy')
+    plt.legend(['Train', 'Validation'])
+    plt.show()
 
 def generateClassifcationReport(model, test_gen):
     target_names = ['BB', 'BK', 'BN', 'BP', 'BQ', 'BR', 'Empty', 'WB', 'WK', 'WN', 'WP', 'WQ', 'WR']
@@ -33,11 +51,14 @@ def generateClassifcationReport(model, test_gen):
 
 
 if __name__ == "__main__":
-    modelWeightsFileName = "model_temp_weights.h5"
+    runName = "temp"
+    modelWeightsFileName = "./RunData/model_" + runName + "_weights.h5"
     testLocation = "./Data/test"
     image_size = (224, 224)
     batch_size = 32
 
+    historyFileName = "./RunData/history_vals_" + runName + ".dat"
+    
     model = deepLearningModel.getModel()
 
     model.summary()
@@ -47,3 +68,8 @@ if __name__ == "__main__":
     test_gen = deepLearningModel.getTestGen(testLocation)
 
     generateClassifcationReport(model, test_gen)
+
+    histData = None
+    with open(historyFileName, "r") as history:
+        histData = json.load(history)
+    plotHistory(histData)

@@ -3,3 +3,5 @@ Data/test*
 Data/train*
 __pycache__
 *.h5
+*.dat
+RunData

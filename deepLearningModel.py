@@ -2,10 +2,10 @@ from keras.applications.vgg16 import VGG16
 from keras.layers import Dense, Flatten
 from keras.models import Model
 from keras.preprocessing.image import ImageDataGenerator
-
+import pandas
 image_size = (224, 224)
 batch_size = 32
-epochs = 10
+epochs = 2
 
 datagen = ImageDataGenerator(
         rotation_range=5,
@@ -58,7 +58,7 @@ def getTrainGen(trainLocation):
 
     return train_gen
 
-def trainModel(model, trainLoc, testLoc, weightName =""):
+def trainModel(model, trainLoc, testLoc, RunName =""):
     train_gen = getTrainGen(trainLoc)
     test_gen = getTestGen(testLoc)
 
@@ -69,7 +69,12 @@ def trainModel(model, trainLoc, testLoc, weightName =""):
         validation_data= test_gen
     )
 
-    model.save_weights("model_" + weightName + "_weights.h5")
+    model.save_weights("./RunData/model_" + RunName + "_weights.h5")
 
-    return history
+    hist_data = pandas.DataFrame(history.history)
+
+    with open("./RunData/history_vals_" + RunName + ".dat", "w") as historyFile:
+        hist_data.to_json(historyFile)
+
+    historyFile.close()
 
