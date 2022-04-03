@@ -1,0 +1,8 @@
+Data/full_data/
+Data/test*
+Data/train*
+__pycache__
+*.h5
+*.dat
+RunData
+Data/data_setup.json
